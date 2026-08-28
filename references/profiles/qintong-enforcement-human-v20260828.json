@@ -1,0 +1,49 @@
+{
+  "profile_id": "qintong-enforcement-human-v20260828",
+  "status": "format-only",
+  "source": "cases/人工矫正材料包/",
+  "final_forbidden_phrases": [
+    "【待确认】",
+    "【待填写】",
+    "【待核对】",
+    "传票载",
+    "未提供可供核验"
+  ],
+  "documents": [
+    {
+      "id": "application",
+      "filename_contains": "强制执行申请书",
+      "extension": ".docx",
+      "table_rows": 18,
+      "table_columns": 2,
+      "max_app_pages": 3,
+      "forbidden_explicit_east_asia_fonts": ["仿宋_GB2312"]
+    },
+    {
+      "id": "authorization",
+      "filename_contains": "授权委托书",
+      "extension": ".docx",
+      "max_app_pages": 1,
+      "title_text": "授权委托书",
+      "title_size_pt": 22,
+      "required_size_pt": 15
+    },
+    {
+      "id": "letter",
+      "filename_contains": "所函",
+      "extension": ".docx",
+      "max_app_pages": 1,
+      "required_media_min": 1,
+      "required_text": ["广东勤通律师事务所", "联系方式"]
+    },
+    {
+      "id": "contract",
+      "filename_contains": "委托代理合同",
+      "extension": ".docx",
+      "title_text": "民商事案件委托代理合同",
+      "title_size_pt": 36,
+      "required_size_pt": 15,
+      "required_text": ["第一条", "第九条", "特别约定"]
+    }
+  ]
+}

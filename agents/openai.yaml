@@ -1,0 +1,7 @@
+interface:
+  display_name: "法律案件工作流"
+  short_description: "仅显式调用的案件证据、法律文书与交付验收流程"
+  default_prompt: "Use $legal-case-workflow for one case under cases/, choose the narrowest mode, and apply the document protocol when producing DOCX files."
+
+policy:
+  allow_implicit_invocation: false
