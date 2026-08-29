@@ -1,11 +1,20 @@
 ---
 name: legal-case-workflow
-description: Explicit-only workflow for one legal matter under this workspace's cases/ directory, covering source intake, evidence-bounded analysis, Chinese legal-document DOCX production, package QA, litigation drafting, and hearing preparation. Do not invoke for ordinary technical, database, Obsidian, generic PDF-conversion, or general legal-question tasks.
+description: Cross-agent, explicit-only workflow for one legal matter under a cases/ directory, covering source intake, evidence-bounded analysis, Chinese legal-document DOCX production, package QA, litigation drafting, and hearing preparation. Use only when the user explicitly invokes, selects, or names legal-case-workflow; do not invoke for ordinary technical, database, Obsidian, generic PDF-conversion, or general legal-question tasks.
 ---
 
 # 法律案件与文书工作流
 
-本 Skill 是当前法律案件工作区的唯一案件入口。只有用户显式调用 `$legal-case-workflow`，并将任务指向 `cases/` 下的具体案件或材料包时，才启动本流程。
+本 Skill 是法律案件工作区的唯一案件入口。只有用户通过当前平台显式调用、选择或点名 `legal-case-workflow`，并将任务指向 `cases/` 下的具体案件或材料包时，才启动本流程。
+
+跨平台显式入口：
+
+- Codex：`$legal-case-workflow`
+- Kimi Code：`/skill:legal-case-workflow`；无命令冲突时也可用 `/legal-case-workflow`
+- WorkBuddy：安装并启用本地技能包后，在对话中明确说“使用 legal-case-workflow 处理……”
+- CodeBuddy Code：`/legal-case-workflow`，或在对话中明确点名本 Skill
+
+仅提到法律问题、PDF、OCR、扫描件、Markdown、文件读取或文本提取，不构成显式启动。
 
 原 `$legal-document-docx` 的文书生成、排版和验收能力已并入本 Skill。不得再同时加载两套相互竞争的格式规则。
 
@@ -25,6 +34,7 @@ description: Explicit-only workflow for one legal matter under this workspace's 
 4. 涉及 DOCX 时，必须完整读取 [document-production-protocol.md](references/document-production-protocol.md)。
 5. 用户指定人工修正版或特定模板时，再读取相应版本画像；不得把画像中的案件事实复制到新案件。
 6. 原始案件材料仅在本地处理；外部法律检索只使用去标识化摘要。
+7. 首次在新的智能体运行时安装或使用时，读取 [platform-compatibility.md](references/platform-compatibility.md)，按当前平台选择入口与等价工具。
 
 ## 三、工作模式
 
@@ -154,3 +164,11 @@ python scripts/validate_case.py --case-dir <案件目录>
 - 可回滚版本位置。
 
 “命令已运行”或“文件已生成”均不等同于任务完成。
+
+## 十三、跨运行时执行规则
+
+- 不依赖某一智能体专有的工具名称；使用当前平台可用的本地文件读取、写入、命令执行和文档渲染能力完成等价步骤。
+- 运行脚本时优先使用可用的 Python 3 解释器。缺少依赖时，先报告具体缺项；能以人工结构检查或视觉检查继续的部分继续完成，并在交接文件中记录未通过的自动检查。
+- 平台成功加载 Skill 不等于案件或文书验收通过；事实、模板、终稿语言、一致性、视觉和版本六道验收门不得降级。
+- WorkBuddy 或其他平台请求本地文件、系统命令或外部服务权限时，只授权当前案件所需的最小范围；未经明确授权，不向第三方服务发送原始案件内容。
+- 各平台的安装目录、调用语法和打包方法按 [platform-compatibility.md](references/platform-compatibility.md) 执行。

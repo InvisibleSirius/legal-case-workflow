@@ -1,10 +1,10 @@
 # 法律案件与文书工作流 Skill
 
-一个面向中国法律案件材料处理与法律文书交付的本地 Codex Skill。它将案件证据整理、法律文书生成和 DOCX 格式验收整合为一个显式调用的工作流。
+一个面向中国法律案件材料处理与法律文书交付的跨智能体 Skill。它将案件证据整理、法律文书生成和 DOCX 格式验收整合为一个显式调用的工作流，可用于 Codex、Kimi Code、WorkBuddy 和 CodeBuddy Code。
 
-> 当前版本：`v1.0.1`  
+> 当前版本：`v1.1.0`
 > 仓库状态：公开发布  
-> 调用方式：`$legal-case-workflow`
+> 核心格式：Agent Skills（`SKILL.md`）
 
 ## 主要能力
 
@@ -52,10 +52,23 @@ legal-case-workflow/
 ├── assets/templates/              # 案件索引、事实矩阵、交接等模板
 ├── references/                    # 证据、文书、子代理及律所字段协议
 │   └── profiles/                  # 可选的版本化格式画像
-└── scripts/                       # 材料接收、案件验收和 DOCX 验收脚本
+└── scripts/                       # 材料接收、案件验收、DOCX 验收和通用打包脚本
 ```
 
-## 安装
+## 平台兼容性
+
+| 平台 | 安装或导入方式 | 显式调用 |
+|---|---|---|
+| Codex | 放入 `.agents/skills/`、`.codex/skills/` 或对应用户级目录 | `$legal-case-workflow` |
+| Kimi Code | 放入 `.kimi/skills/`、`.agents/skills/`；默认也可发现已有 `~/.codex/skills/` | `/skill:legal-case-workflow` |
+| WorkBuddy | 在技能页面上传本仓库生成的通用 ZIP 并启用 | 明确说“使用 legal-case-workflow 处理……” |
+| CodeBuddy Code | 放入 `.codebuddy/skills/` 或 `~/.codebuddy/skills/` | `/legal-case-workflow` |
+
+本仓库保持一份事实、证据、格式和验收规则。各平台只适配入口与工具能力，不维护互相漂移的分叉版本。详细说明见 [跨平台兼容与调用协议](references/platform-compatibility.md)。
+
+## 安装与调用
+
+### Codex
 
 在目标法律工作区根目录执行：
 
@@ -65,6 +78,35 @@ git clone https://github.com/InvisibleSirius/legal-case-workflow.git \
 ```
 
 确保工作区规则要求只有用户显式调用 `$legal-case-workflow` 才启动完整案件流程。
+
+### Kimi Code
+
+用户级安装：
+
+```bash
+git clone https://github.com/InvisibleSirius/legal-case-workflow.git \
+  ~/.kimi/skills/legal-case-workflow
+```
+
+项目级也可安装到 `.agents/skills/legal-case-workflow`。调用示例：
+
+```text
+/skill:legal-case-workflow 对 cases/CASE-2026-001 执行 analysis-focused 模式
+```
+
+### WorkBuddy
+
+先在仓库根目录生成通用包：
+
+```bash
+python3 scripts/package_skill.py
+```
+
+然后在 WorkBuddy 的技能页面选择“上传技能”，导入 `dist/` 下的 ZIP 并启用。压缩包根目录已直接放置 `SKILL.md`，适合本地技能包导入。
+
+### CodeBuddy Code
+
+将仓库放到项目的 `.codebuddy/skills/legal-case-workflow/`，或用户目录的 `~/.codebuddy/skills/legal-case-workflow/`，再用 `/legal-case-workflow` 调用。
 
 ## 使用示例
 
@@ -82,6 +124,7 @@ $legal-case-workflow
 python scripts/case_intake.py --self-test
 python scripts/validate_case.py --self-test
 python scripts/validate_document_package.py --self-test
+python scripts/package_skill.py --self-test
 ```
 
 按版本画像检查 DOCX 文书包：
@@ -104,7 +147,9 @@ python scripts/validate_document_package.py \
 
 ## 版本说明
 
-本版本将原独立的法律文书排版规则并入案件工作流，形成“案件证据—文书制作—格式验收”三层结构。详细变化见 [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)。
+`v1.1.0` 在原“案件证据—文书制作—格式验收”三层结构上增加 Kimi Code、WorkBuddy 与 CodeBuddy Code 的发现、调用和打包兼容层。详细变化见 [CHANGELOG.zh-CN.md](CHANGELOG.zh-CN.md)。
+
+平台依据：[Kimi Code Agent Skills](https://github.com/MoonshotAI/kimi-cli/blob/main/docs/en/customization/skills.md)、[WorkBuddy 技能](https://cloud.tencent.com/document/product/1831/134432)、[CodeBuddy Skills](https://cloud.tencent.com/document/product/1831/134516)。
 
 ## 许可
 
